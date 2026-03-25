@@ -6,6 +6,7 @@ A turn-based roguelike card game built with Unity.
 
 **Student**: 22421647 백승빈  
 **Email**: tmdqls0203sd@naver.com  
+**GitHub Repository**: (https://github.com/BaekSeungBin/YU_OpenSW_ProjectRC)
 
 ---
 

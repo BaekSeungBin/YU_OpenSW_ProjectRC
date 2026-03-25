@@ -1,6 +1,6 @@
 # 🎮 Project RC: Roguelike Card Game
 
-<img src="./assets/logo.png" width="300"/>
+<img width="1024" height="1024" alt="Image" src="https://github.com/user-attachments/assets/5b0cfe01-29e8-40df-abd5-1e6c1b58648a" />
 
 A turn-based roguelike card game built with Unity.
 
@@ -52,7 +52,7 @@ A turn-based roguelike card game built with Unity.
 ---
 
 ## 📌 2. System Context
-<img src="./assets/diagram.png" width="300"/>
+<img width="879" height="1177" alt="Image" src="https://github.com/user-attachments/assets/a7cf8018-d9cc-46d2-8a4a-f54b873c1597" />
 
 ### 🧩 구성 요소
 

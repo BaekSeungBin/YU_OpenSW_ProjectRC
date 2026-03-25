@@ -52,7 +52,7 @@ A turn-based roguelike card game built with Unity.
 ---
 
 ## 📌 2. System Context
-![Logo](./diagram.png)
+<img src="./assets/diagram.png" width="300"/>
 
 ### 🧩 구성 요소
 

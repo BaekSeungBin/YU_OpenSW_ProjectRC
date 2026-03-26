@@ -76,10 +76,10 @@ A turn-based roguelike card game built with Unity.
 | 2 | Use Card | Player | 카드 사용 |
 | 3 | End Turn | Player | 턴 종료 |
 | 4 | Enemy Action | System | 적 자동 행동 |
-| 5 | Battle End | System | 전투 종료 |
-| 6 | Select Reward | Player | 카드 또는 유물 선택 |
-| 7 | Move Stage | Player | 다음 스테이지 이동 |
-| 8 | Boss Battle | System | 보스 전투 |
+| 5 | Boss Battle | System | 보스 전투 |
+| 6 | Battle End | System | 전투 종료 |
+| 7 | Select Reward | Player | 카드 또는 유물 선택 |
+| 8 | Move Stage | Player | 다음 스테이지 이동 |
 | 9 | Game Over | System | 플레이어 사망 시 종료 |
 
 ---
@@ -110,6 +110,12 @@ A turn-based roguelike card game built with Unity.
 - **Dynamics**: 플레이어 턴 종료 후  
 - **Goals**: 적 행동 구현  
 
+### ▶ Boss Battle
+- **Purpose**: 보스 전투  
+- **Approach**: 보스 등장 및 전투  
+- **Dynamics**: 보스 방 진입  
+- **Goals**: 최종 전투 구현
+  
 ### ▶ Battle End
 - **Purpose**: 전투 종료  
 - **Approach**: HP 0 시 종료  
@@ -126,14 +132,8 @@ A turn-based roguelike card game built with Unity.
 - **Purpose**: 스테이지 이동  
 - **Approach**: 다음 방 선택  
 - **Dynamics**: 전투 종료 후  
-- **Goals**: 스테이지 진행  
-
-### ▶ Boss Battle
-- **Purpose**: 보스 전투  
-- **Approach**: 보스 등장 및 전투  
-- **Dynamics**: 보스 방 진입  
-- **Goals**: 최종 전투 구현  
-
+- **Goals**: 스테이지 진행
+  
 ### ▶ Game Over
 - **Purpose**: 게임 종료  
 - **Approach**: 플레이어 HP 0 시 종료  

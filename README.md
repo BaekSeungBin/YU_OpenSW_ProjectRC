@@ -198,7 +198,7 @@ A turn-based roguelike card game built with Unity.
 ![Gameplay](./assets/gameplay.png)
 
 
-# Analysis pahse
+# Analysis Phase
 
 # Analysis
 

@@ -724,9 +724,8 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - EXIT 버튼
 - 게임 로고
 
-```text
 <img width="1953" height="1219" alt="Image" src="https://github.com/user-attachments/assets/924c3bf9-36a6-4d8c-973e-93f45af2e491" />
-```
+
 
 ---
 

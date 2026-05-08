@@ -739,9 +739,7 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - 유물 설명
 - 선택 버튼
 
-```text
-[Relic Selection Screen Screenshot 예정]
-```
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/41bf62fc-229e-4766-bb1a-f37bf8b69f9f" />
 
 ---
 
@@ -758,11 +756,8 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - 카드 핸드 UI
 - End Turn 버튼
 
-```text
-[Battle Screen Screenshot 예정]
-```
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/a72b800e-c5c9-4176-aac7-79dfaecdf9c1" />
 
----
 
 ## 4.4 Card Effect Screen
 
@@ -774,9 +769,6 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - 공격 이펙트
 - 방어 증가 효과
 
-```text
-[Card Effect Screen Screenshot 예정]
-```
 
 ---
 
@@ -790,9 +782,7 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - 유물 보상
 - Skip 버튼
 
-```text
-[Reward Screen Screenshot 예정]
-```
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/f8c22702-bd9a-4fc6-98cb-a4bc8ff11017" />
 
 ---
 
@@ -806,9 +796,8 @@ Game System은 내부적으로 다음과 같이 구성된다.
 - Retry 버튼
 - Main Menu 버튼
 
-```text
-[Game Over Screen Screenshot 예정]
-```
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/18f374a3-bd8e-4901-8dd0-e7fc8c96607d" />
+
 
 ---
 

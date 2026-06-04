@@ -210,13 +210,6 @@ A turn-based roguelike card game built with Unity.
 
 ---
 
-# Revision History
-
-| Revision Date | Version | Description | Author |
-|---|---|---|---|
-| 2026-05-08 | 0.2 | Revised Analysis Document | 백승빈 |
-
----
 
 # Contents
 
@@ -833,3 +826,349 @@ Game System은 내부적으로 다음과 같이 구성된다.
 
 - Game Programming Patterns  
   https://gameprogrammingpatterns.com/
+
+
+---
+# Design Phase
+
+# Desing
+
+## Project RC : Roguelike Card Game
+
+- **Student ID**: 22421647  
+- **Author**: 백승빈  
+- **Email**: tmdqls0203sd@naver.com  
+
+---
+
+
+# Contents
+
+* [1. Introduction](#1-introduction)
+* [2. Class Diagram](#2-class-diagram)
+* [3. Sequence Diagram](#3-sequence-diagram)
+* [4. State Machine Diagram](#4-state-machine-diagram)
+* [5. Implementation Requirements](#5-implementation-requirements)
+* [6. Glossary](#6-glossary)
+* [7. References](#7-references)
+
+---
+
+# 1. Introduction
+
+## 1.1 Summary
+
+최근 인디 게임 시장에서는 전략성과 높은 재플레이성을 제공하는 로그라이크 장르가 큰 인기를 얻고 있다. 특히 카드 기반 턴제 로그라이크 게임은 플레이어가 상황에 따라 다양한 전략을 선택할 수 있다는 특징을 가진다.
+
+Project RC는 카드 시스템과 격자(Grid) 기반 턴제 전투를 결합한 로그라이크 게임이다. 플레이어는 맵 위에서 이동 카드를 사용하여 위치를 조정하고, 근접 공격 또는 원거리 공격 카드를 사용하여 적과 전투한다.
+
+각 스테이지는 하나의 전투 맵으로 구성되며, 플레이어는 스테이지 내부의 일반 적과 보스를 상대해야 한다. 보스를 처치하면 스테이지를 클리어할 수 있으며, 이후 카드 또는 유물(Relic) 보상을 획득하여 덱을 강화할 수 있다.
+
+## 1.2 Introduce Project RC
+
+* Turn-based Roguelike Game
+* Card-based Action System
+* Relic System
+* Stage Progression System
+* Roguelike Growth Structure
+
+## 1.3 Goal
+
+본 Design 보고서에서는 Project RC의 주요 클래스 구조를 설명하고 객체 간 상호작용을 Sequence Diagram으로 표현한다. 또한 게임의 상태 변화 과정을 State Machine Diagram으로 나타내어 전체 시스템 구조를 설명한다.
+
+---
+
+# 2. Class Diagram
+
+본 프로젝트는 Unity의 컴포넌트 기반 구조를 사용하였으므로 전통적인 상속 관계보다 클래스 간 연관 및 합성 관계를 중심으로 설계하였다.
+<img width="358" height="916" alt="Image" src="https://github.com/user-attachments/assets/0c000175-b23f-4fb0-b720-841b84509827" />
+
+이 클래스 다이어그램은 Project RC의 주요 시스템 구조를 나타낸다. GameManager는 전체 게임 흐름을 관리하며 BattleManager는 전투 진행과 턴 전환을 담당한다. Player는 체력, 방어도, 위치 등의 상태 정보를 가지고 있으며 이동, 공격, 방어 행동은 Card 클래스를 상속받은 MoveCard, AttackCard, DefenseCard, SkillCard를 통해 수행된다.
+
+Enemy는 적의 상태를 저장하고 EnemyAI는 적의 행동을 결정한다. CardManager와 RelicManager는 카드와 유물을 관리하고 RewardManager는 전투 종료 후 보상을 생성한다. UIManager는 플레이어의 HP, Energy, 카드, 보상 화면 등을 표시한다.
+
+## Main Classes
+
+| Class         | Description               |
+| ------------- | ------------------------- |
+| GameManager   | 게임 전체 진행 흐름을 관리하는 클래스     |
+| BattleManager | 전투 진행과 턴 관리를 담당하는 클래스     |
+| RewardManager | 전투 종료 후 보상을 생성하는 클래스      |
+| UIManager     | 게임 UI를 출력하고 갱신하는 클래스      |
+| Player        | 플레이어의 상태를 관리하는 클래스        |
+| Enemy         | 적 캐릭터의 상태를 관리하는 클래스       |
+| EnemyAI       | 적의 행동을 결정하는 AI 클래스        |
+| GridManager   | 격자 기반 맵과 위치 정보를 관리하는 클래스  |
+| CardManager   | 플레이어의 카드 시스템을 관리하는 클래스    |
+| Card          | 모든 카드의 기본 정보를 저장하는 부모 클래스 |
+| MoveCard      | 플레이어 이동을 수행하는 카드 클래스      |
+| AttackCard    | 적에게 피해를 주는 공격 카드 클래스      |
+| DefenseCard   | 플레이어에게 방어도를 부여하는 카드 클래스   |
+| SkillCard     | 특수 효과를 수행하는 카드 클래스        |
+| RelicManager  | 플레이어가 보유한 유물을 관리하는 클래스    |
+| Relic         | 유물 정보를 저장하는 클래스           |
+
+## GameManager
+
+| Attribute / Method | Description    |
+| ------------------ | -------------- |
+| currentStage       | 현재 진행 중인 스테이지  |
+| isGameOver         | 게임 종료 여부       |
+| StartGame()        | 게임을 시작한다       |
+| LoadStage()        | 새로운 스테이지를 불러온다 |
+| GameOver()         | 게임 종료 상태를 처리한다 |
+| ReturnMainMenu()   | 메인 메뉴로 이동한다    |
+
+## BattleManager
+
+| Attribute / Method | Description      |
+| ------------------ | ---------------- |
+| currentTurn        | 현재 턴 정보          |
+| currentEnergy      | 현재 사용 가능한 에너지    |
+| isBattleEnd        | 전투 종료 여부         |
+| StartBattle()      | 전투를 시작한다         |
+| StartPlayerTurn()  | 플레이어 턴을 시작한다     |
+| EndPlayerTurn()    | 플레이어 턴을 종료한다     |
+| StartEnemyTurn()   | 적 턴을 시작한다        |
+| CheckBattleEnd()   | 전투 종료 여부를 확인한다   |
+| CheckStageClear()  | 보스 적 처치 여부를 확인한다 |
+
+## RewardManager
+
+| Attribute / Method | Description    |
+| ------------------ | -------------- |
+| rewardCards        | 생성된 카드 보상      |
+| rewardRelics       | 생성된 유물 보상      |
+| GenerateReward()   | 보상을 생성한다       |
+| SelectReward()     | 플레이어가 보상을 선택한다 |
+| ApplyReward()      | 선택한 보상을 적용한다   |
+
+## UIManager
+
+| Method         | Description  |
+| -------------- | ------------ |
+| UpdateHP()     | HP UI를 갱신한다  |
+| UpdateEnergy() | 에너지 UI를 갱신한다 |
+| UpdateHand()   | 손패 UI를 갱신한다  |
+| ShowReward()   | 보상 화면을 출력한다  |
+
+## Player
+
+| Attribute / Method | Description   |
+| ------------------ | ------------- |
+| hp                 | 현재 체력         |
+| maxHp              | 최대 체력         |
+| block              | 현재 방어도        |
+| position           | 플레이어 위치       |
+| TakeDamage()       | 피해를 받는다       |
+| Heal()             | 체력을 회복한다      |
+| GainBlock()        | 방어도를 증가시킨다    |
+| Die()              | 플레이어 사망을 처리한다 |
+
+## Enemy
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| hp                 | 현재 체력       |
+| position           | 현재 위치       |
+| enemyType          | 적 종류        |
+| damage             | 공격력         |
+| Move()             | 적을 이동시킨다    |
+| Attack()           | 플레이어를 공격한다  |
+| TakeDamage()       | 피해를 받는다     |
+| Die()              | 적 사망을 처리한다  |
+
+## EnemyAI
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| target             | 현재 공격 대상    |
+| state              | 현재 AI 상태    |
+| Decide()           | 행동을 결정한다    |
+| MoveTo()           | 목표 위치로 이동한다 |
+| Attack()           | 공격 행동을 수행한다 |
+| Defense()          | 방어 행동을 수행한다 |
+
+## GridManager
+
+| Attribute / Method | Description     |
+| ------------------ | --------------- |
+| gridSize           | 맵 크기            |
+| playerPos          | 플레이어 위치         |
+| enemyPosList       | 적 위치 목록         |
+| MoveUnit()         | 유닛을 이동시킨다       |
+| CheckTile()        | 타일 상태를 확인한다     |
+| GetTiles()         | 이동 가능한 타일을 반환한다 |
+
+## CardManager
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| deck               | 드로우 덱       |
+| hand               | 현재 손패       |
+| discardPile        | 버린 카드 더미    |
+| DrawCard()         | 카드를 뽑는다     |
+| UseCard()          | 카드를 사용한다    |
+| DiscardCard()      | 카드를 버린다     |
+
+## Card
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| cardName           | 카드 이름       |
+| cost               | 카드 사용 비용    |
+| description        | 카드 설명       |
+| cardType           | 카드 종류       |
+| rarity             | 카드 희귀도      |
+| Execute()          | 카드 효과를 실행한다 |
+
+## MoveCard
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| moveRange          | 이동 가능 거리    |
+| Execute()          | 플레이어를 이동시킨다 |
+
+## AttackCard
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| damage             | 공격력         |
+| Execute()          | 적에게 피해를 준다  |
+
+## DefenseCard
+
+| Attribute / Method | Description      |
+| ------------------ | ---------------- |
+| blockAmt           | 획득하는 방어도         |
+| Execute()          | 플레이어에게 방어도를 부여한다 |
+
+## SkillCard
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| effect             | 특수 효과 정보    |
+| Execute()          | 특수 효과를 적용한다 |
+
+## RelicManager
+
+| Attribute / Method | Description |
+| ------------------ | ----------- |
+| relicList          | 보유 중인 유물 목록 |
+| AddRelic()         | 유물을 추가한다    |
+| ApplyEffect()      | 유물 효과를 적용한다 |
+
+## Relic
+
+| Attribute / Method | Description  |
+| ------------------ | ------------ |
+| relicName          | 유물 이름        |
+| effectType         | 유물 효과 종류     |
+| rarity             | 유물 희귀도       |
+| Activate()         | 유물 효과를 활성화한다 |
+
+---
+
+# 3. Sequence Diagram
+
+## 3.1 Game Start Sequence Diagram
+<img width="587" height="391" alt="Image" src="https://github.com/user-attachments/assets/54fcd00b-de28-4d51-b616-0179667f0f6f" />
+
+이 시컨스 다이어그램은 게임시작 과정을 나타낸다. 플레이어가 게임 시작 버튼을 누르면 GameManager가 게임을 초기화하고 RewardManager가 시작 보상을 생성한다. 플레이어가 보상을 선택하면 RewardManager가 그 보상을 적용하고 그 이후에 BattleManager가 첫 전투를 시작하게 한다 마지막으로 UIManager가 HP, 에너지, 손패를 결정하고 게임을 진행할 수 있도록 한다 시작 보상은 유물또는 카드중 하나로 적용될 수 있다.
+
+## 3.2 Use Card Sequence Diagram
+<img width="593" height="395" alt="Image" src="https://github.com/user-attachments/assets/9619ac68-fefd-4e98-9a8c-7d7a21552a98" />
+
+이 다이어그램은 플레이어가 카드를 사용하는 과정을 나타내는 다이어그램이다. 플레이어가 카드를 선택하면 CardManager가 카드 사용을 요청하고 BattleManager가 에너지 사용 가능 여부를 확인한다 그리고 만약 에너지가 충분하면 카드 효과가 실행되어 적에게 피해를 입히고 에너지가 차감된다. 그 이후 손패와 에너지 UI가 갱신되고 에너지가 부족한 경우에는 오류 메시지를 출력한다.
+
+## 3.3 End Turn Sequence Diagram
+<img width="640" height="427" alt="Image" src="https://github.com/user-attachments/assets/792b77cb-a075-410e-aab9-ba61e82cd0ba" />
+
+이 다이어그램은 플레이어 턴 종료 후 적 턴이 진행되는 과정을 나타내는 다이어그램이다. 플레이어가턴 종료를 선택하면 BattleManager가 플레이어 턴을 종료하고 적 턴을 시작한다. EnemyAI는 적의 종류를 구별하여 행동을 결정하고 일반 적과 엘리트 적과 달리 보스적은 특수 패턴을 사용하여 공격한다. 공격이 완료되면 플레이어는 피해를 받고 BattleManager는 전투 종료를 확인한다. 전투가 계속되면 플레이어의 턴이 시작되고 HP와 에너지 UI가 갱신된다. 반대로 플레이어의 체력이 0이하가 되면 GameOver()가 호출되고 게임 오버 화면이 출력된다. 만약 보스의 체력을 0이하로 만들었다면 즉시 해당 스테이지를 클리어한다.
+
+## 3.4 Reward Sequence Diagram
+<img width="475" height="316" alt="Image" src="https://github.com/user-attachments/assets/d5247f14-3212-4109-8853-bc5a60e7052b" />
+
+이 다이어그램은 전투 종료 후 보상을 획득하는 과정을 나타내는 다이어그램이다.
+BattleManager는 적의 체력을 확인하여 전투 종료 여부를 판단한다 그리고 전투가 종료되면 RewardManager에게 보상 생성을 요청한다 생성된 보상은 UIManager가 플레이어에게 표시해주고 플레이어는 원하는 보상을 선택한다 . 원하는 보상을 선택하면 RewardManager는 선택된 보상을 적용하며, 보상 종류에 따라서 카드가 덱에 추가되거나 혹은 유물을 획득한다 그리고 모든 보상이 적용 완료되면 보상 처리 과정을 종료한
+
+---
+
+# 4. State Machine Diagram
+
+## 4.1 Player State Machine
+<img width="553" height="336" alt="Image" src="https://github.com/user-attachments/assets/0f42a596-199a-43bf-93ea-6cb33dc0d276" />
+
+이 상태 머신 다이어그램은 플레이어의 상태 변화를 나타내는데 플레이어는 기본적으로 Idle 상태에서 대기하며 카드를 선택하면 Card Selected상태로 전환된다. 선택한 카드를 사용할 시 Card Executing 상태가 되는데 이때 카드 효과 적용이 완료되면 다시 Idle 상태로 돌아간다. 플레이어가 턴을 종료하면 Wait Enemy Turn 상태가 되고 적 턴이 긑나면 다시 Idle 상태가 된다 그리고 피해를 받으면 Take Damage 상태로 이동되고 HP가 0보다 크면 Idle 상태로 돌아가지만 HP가 0이하가 되면 Dead 상태 이후 Game Over 상태가 된다.
+
+## 4.2 BattleManager State Machine
+<img width="640" height="246" alt="Image" src="https://github.com/user-attachments/assets/50f2da5e-78e7-4168-a281-a6be3e85837e" />
+
+이 다이어그램은 전투 전체 흐름을 관리하는 BattleManager의 상태 변화를 나타내는데 전투가 시작되면 Battle Start 상태가 되고 이후에 Palyer Turn 상태로 전환된다. 플레이어가 턴을 종료하면 Enemy Turn 상태가 되고 적 행동이 끝나면 Check Battle Result 상태에서 전투 결과를 확인한다.
+보스의 HP가 0이하라면 Stage Clear 상태로 전환하고 보상을 지급한 후 다음 스테이지를 불러온다. 플레이어의 HP가 0이하면 Game Over 상태가 되어 전투가 종료된다. 그 외의 경우엔 Battle Continue 조건에 따라 다시 Player Turn 상태로 돌아가 전투를 계속한다.
+
+---
+
+# 5. Implementation Requirements
+
+## 5.1 Development Environment
+
+| Item     | Description                         |
+| -------- | ----------------------------------- |
+| Engine   | Unity 6.4                           |
+| Language | C#                                  |
+| IDE      | JetBrains Rider, Visual Studio Code |
+| OS       | Windows 10 / Windows 11             |
+
+## 5.2 Hardware Requirements
+
+| Item    | Requirement                         |
+| ------- | ----------------------------------- |
+| CPU     | Intel Core i3+ / AMD Ryzen 3+       |
+| RAM     | 8 GB                                |
+| Storage | 10 GB Available Space               |
+| GPU     | DirectX 11 Compatible Graphics Card |
+
+---
+
+# 6. Glossary
+
+| Term                  | Description                |
+| --------------------- | -------------------------- |
+| Roguelike             | 플레이할 때마다 맵, 적, 보상이 달라지는 장르 |
+| Card                  | 플레이어가 사용하는 행동 카드           |
+| Deck                  | 플레이어가 보유한 카드들의 집합          |
+| Hand                  | 현재 플레이어가 사용할 수 있는 카드       |
+| Discard Pile          | 사용 후 버려진 카드 더미             |
+| Energy                | 카드를 사용하기 위해 필요한 자원         |
+| Relic                 | 플레이어에게 지속 효과를 제공하는 아이템     |
+| Battle                | 플레이어와 적 사이의 전투             |
+| Turn                  | 플레이어와 적이 번갈아 행동하는 시스템      |
+| Grid                  | 격자 기반 전투 맵                 |
+| Tile                  | Grid를 구성하는 개별 칸            |
+| Enemy                 | 플레이어와 전투하는 적               |
+| Elite Enemy           | 일반 적보다 강한 적                |
+| Boss Enemy            | 스테이지 클리어를 위한 적             |
+| Stage                 | 하나의 전투 단위                  |
+| Stage Clear           | 보스를 처치하여 스테이지를 완료한 상태      |
+| HP                    | 체력                         |
+| Block                 | 피해 감소 수치                   |
+| Damage                | 공격으로 입히는 피해                |
+| Enemy AI              | 적의 행동을 결정하는 시스템            |
+| Reward                | 전투 종료 후 획득하는 보상            |
+| State Machine Diagram | 상태 변화를 표현하는 UML 다이어그램      |
+| Class Diagram         | 클래스 구조를 표현하는 UML 다이어그램     |
+| Unity                 | 게임 개발 엔진                   |
+| C#                    | 게임 개발 언어                   |
+
+---
+
+# 7. References
+
+1. Structural Modeling I/II
+2. Behavioral Modeling I/II
+3. Unity Manual
+4. Unity Scripting API
+5. draw.io
+6. ChatGPT
+
